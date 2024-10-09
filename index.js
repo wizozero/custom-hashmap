@@ -12,6 +12,32 @@ export default function HashMap() {
 		return hashCode
 	}
 
+	function set(key, value) {
+		const index = hash(key)
+
+		if (buckets[index] === undefined) {
+			buckets[index] = [{ key, value }]
+			size++
+		} else {
+			let found = false
+			for (let i = 0; i < buckets[index].length; i++) {
+				if (buckets[index][i].key === key) {
+					buckets[index][i].value = value
+					found = true
+					break
+				}
+			}
+			if (!found) {
+				buckets[index].push({ key, value })
+				size++
+			}
+		}
+
+		if (size / buckets.length > loadFactor) {
+			resize()
+		}
+	}
+
 	function resize() {
 		const newBuckets = new Array(buckets.length * 2)
 		const oldBuckets = buckets
@@ -28,31 +54,7 @@ export default function HashMap() {
 	}
 
 	return {
-		set(key, value) {
-			const index = hash(key)
-
-			if (buckets[index] === undefined) {
-				buckets[index] = [{ key, value }]
-				size++
-			} else {
-				let found = false
-				for (let i = 0; i < buckets[index].length; i++) {
-					if (buckets[index][i].key === key) {
-						buckets[index][i].value = value
-						found = true
-						break
-					}
-				}
-				if (!found) {
-					buckets[index].push({ key, value })
-					size++
-				}
-			}
-
-			if (size / buckets.length > loadFactor) {
-				resize()
-			}
-		},
+		set,
 		get(key) {
 			const index = hash(key)
 
