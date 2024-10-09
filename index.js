@@ -90,5 +90,26 @@ function HashMap() {
 			buckets = new Array(16)
 			size = 0
 		},
+		keys() {
+			const allKeys = []
+			for (const bucket of buckets) {
+				if (bucket) {
+					for (const item of bucket) {
+						allKeys.push(item.key)
+					}
+				}
+			}
+			return allKeys
+		},
+		values() {
+			const allValues = []
+			for (const bucket of buckets) {
+				if (bucket) {
+					for (const item of bucket) {
+						allValues.push(item.value)
+					}
+				}
+			}
+		},
 	}
 }
