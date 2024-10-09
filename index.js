@@ -1,5 +1,5 @@
 function HashMap() {
-	const buckets = new Array(16)
+	let buckets = new Array(16)
 	let size = 0
 	const loadFactor = 0.75
 
@@ -82,6 +82,13 @@ function HashMap() {
 				}
 			}
 			return false
+		},
+		length() {
+			return size
+		},
+		clear() {
+			buckets = new Array(16)
+			size = 0
 		},
 	}
 }
