@@ -66,5 +66,22 @@ function HashMap() {
 			}
 			return false
 		},
+		remove(key) {
+			const index = hash(key)
+
+			if (buckets[index] === undefined) return false
+
+			for (i = 0; i < buckets[index].length; i++) {
+				if (buckets[index][i].key === key) {
+					buckets[index].splice(i, 1)
+					size--
+					if (buckets[index].length === 0) {
+						buckets[index] = undefined
+					}
+					return true
+				}
+			}
+			return false
+		},
 	}
 }
