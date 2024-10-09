@@ -54,5 +54,17 @@ function HashMap() {
 				}
 			}
 		},
+		has(key) {
+			const index = hash(key)
+
+			if (buckets[index] === undefined) return false
+
+			for (i = 0; i < buckets[index].length; i++) {
+				if (buckets[index][i].key === key) {
+					return true
+				}
+			}
+			return false
+		},
 	}
 }
