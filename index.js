@@ -111,5 +111,18 @@ function HashMap() {
 				}
 			}
 		},
+		entries() {
+			const allKeysValues = []
+
+			for (const bucket of buckets) {
+				if (bucket) {
+					for (const element of bucket) {
+						allKeysValues.push([element.key, element.value])
+					}
+				}
+			}
+
+			return allKeysValues
+		},
 	}
 }
