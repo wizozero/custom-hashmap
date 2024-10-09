@@ -1,21 +1,30 @@
-function HashMap() {
+export default function HashMap() {
 	let buckets = new Array(16)
 	let size = 0
 	const loadFactor = 0.75
 
 	function hash(key) {
 		let hashCode = 0
-
-		const primenumber = 31
+		const primeNumber = 31
 		for (let i = 0; i < key.length; i++) {
-			hashCode = primenumber * hashCode + (key.charCodeAt(i) % buckets.length)
+			hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % buckets.length
 		}
-
-		if (hashCode < 0 || hashCode >= buckets.length) {
-			throw new Error('Trying to access index out of bound')
-		}
-
 		return hashCode
+	}
+
+	function resize() {
+		const newBuckets = new Array(buckets.length * 2)
+		const oldBuckets = buckets
+		buckets = newBuckets
+		size = 0
+
+		for (const bucket of oldBuckets) {
+			if (bucket) {
+				for (const item of bucket) {
+					set(item.key, item.value)
+				}
+			}
+		}
 	}
 
 	return {
@@ -27,7 +36,7 @@ function HashMap() {
 				size++
 			} else {
 				let found = false
-				for (i = 0; i < buckets[index].length; i++) {
+				for (let i = 0; i < buckets[index].length; i++) {
 					if (buckets[index][i].key === key) {
 						buckets[index][i].value = value
 						found = true
@@ -38,9 +47,10 @@ function HashMap() {
 					buckets[index].push({ key, value })
 					size++
 				}
-				if (size / buckets.length > loadFactor) {
-					// resize()
-				}
+			}
+
+			if (size / buckets.length > loadFactor) {
+				resize()
 			}
 		},
 		get(key) {
@@ -48,18 +58,19 @@ function HashMap() {
 
 			if (buckets[index] === undefined) return null
 
-			for (i = 0; i < buckets[index].length; i++) {
+			for (let i = 0; i < buckets[index].length; i++) {
 				if (buckets[index][i].key === key) {
 					return buckets[index][i].value
 				}
 			}
+			return null
 		},
 		has(key) {
 			const index = hash(key)
 
 			if (buckets[index] === undefined) return false
 
-			for (i = 0; i < buckets[index].length; i++) {
+			for (let i = 0; i < buckets[index].length; i++) {
 				if (buckets[index][i].key === key) {
 					return true
 				}
@@ -71,7 +82,7 @@ function HashMap() {
 
 			if (buckets[index] === undefined) return false
 
-			for (i = 0; i < buckets[index].length; i++) {
+			for (let i = 0; i < buckets[index].length; i++) {
 				if (buckets[index][i].key === key) {
 					buckets[index].splice(i, 1)
 					size--
@@ -110,10 +121,10 @@ function HashMap() {
 					}
 				}
 			}
+			return allValues
 		},
 		entries() {
 			const allKeysValues = []
-
 			for (const bucket of buckets) {
 				if (bucket) {
 					for (const element of bucket) {
@@ -121,7 +132,6 @@ function HashMap() {
 					}
 				}
 			}
-
 			return allKeysValues
 		},
 	}
